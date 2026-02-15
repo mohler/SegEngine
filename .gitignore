@@ -1,0 +1,6 @@
+/target/
+/GLOWORMJ_QT_viaperlrmiBETA.jar
+*.jar
+*.pt
+*.pth
+.metadata/
