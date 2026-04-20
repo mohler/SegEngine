@@ -31,9 +31,9 @@ public class SegmentationTest {
         ip.setInterpolationMethod(ImageProcessor.BILINEAR);
 
         // Titration modifications
-//        ip.scale(0.5, 0.5);       // Test resolution/scaling
+        ip.scale(0.7, 0.7);       // Test resolution/scaling
         ip.multiply(1.2);         // Test contrast/brightness
-        ip.rotate(180.0);          // Test orientation
+        ip.rotate(135.0);          // Test orientation
 
         // 2. Convert back to ImagePlus, then to standard Java BufferedImage
         ImagePlus modifiedImp = new ImagePlus("Titration_Step", ip);

@@ -56,9 +56,8 @@ public class CytoSegmenter {
         if (IJ.isMacOSX()) {
         	
         } else if (IJ.isWindows()) {
-        	modelFolder = IJ.getDirectory("home");
-        	File modelDirFile = new File(modelFolder + "models");
-        	modelDirFile.mkdirs();
+        	modelFolder = "file:///" + IJ.getDirectory("home") + "models/";
+        	modelFolder = modelFolder.replace("\\", "/");
         }
         System.out.println("--- Initializing AI Engine (Direct V100 Trace) ---");
         System.out.println("Loading local file: " + modelFolder + modelFileName + ".pt");
