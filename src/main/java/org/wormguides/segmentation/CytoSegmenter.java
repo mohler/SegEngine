@@ -17,6 +17,7 @@ import ai.djl.training.util.ProgressBar;
 import ai.djl.translate.Batchifier;
 import ai.djl.translate.Translator;
 import ai.djl.translate.TranslatorContext;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
@@ -49,9 +50,16 @@ public class CytoSegmenter {
 
         // DIRECT PATH: This bypasses the 'ModelNotFoundException' entirely.
         // Note: DJL likes the folder path for optModelUrls, then the filename for optModelName.
-        String modelFolder = "file:///C:/models/"; 
-        String modelFileName = "resnet101_v100"; // Matches resnet101_v100.pt
 
+        String modelFolder = "/Users/wmohler/models/"; 
+        String modelFileName = "resnet101_v100"; // Matches resnet101_v100.pt
+        if (IJ.isMacOSX()) {
+        	
+        } else if (IJ.isWindows()) {
+        	modelFolder = IJ.getDirectory("home");
+        	File modelDirFile = new File(modelFolder + "models");
+        	modelDirFile.mkdirs();
+        }
         System.out.println("--- Initializing AI Engine (Direct V100 Trace) ---");
         System.out.println("Loading local file: " + modelFolder + modelFileName + ".pt");
 
@@ -60,13 +68,16 @@ public class CytoSegmenter {
                 .optModelUrls(modelFolder)
                 .optModelName(modelFileName)
                 .optEngine("PyTorch")
-                .optDevice(Device.gpu(0)) // Force Tesla V100
+                // Replace .optDevice(Device.gpu(0)) with this:
+                //   .optDevice(Device.fromName("mps"))         
+                //.optDevice(Device.cpu())
+                .optDevice(IJ.isWindows()?Device.gpu(0):Device.cpu())
                 .optTranslator(new ManualTranslator())
                 .build();
 
         // This now loads the file from your C: drive, NOT the internet.
         model = ModelZoo.loadModel(criteria);
-        System.out.println("SUCCESS: AI Engine Bound to Tesla V100 via Local Artifact.");
+        System.out.println("SUCCESS: AI Engine Bound to Processor.");
     }
     
     /**
